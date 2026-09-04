@@ -1,69 +1,116 @@
-# API Automation with Cucumber.js
+# API Automation Framework | JavaScript, Cucumber.js & Axios
 
-A CV-ready, black-box API automation framework for the public [Restful Booker API](https://restful-booker.herokuapp.com/apidoc/index.html). You will build the tests yourself, one small scenario at a time. The finished project will demonstrate BDD, CRUD, authentication, negative testing, JSON-schema validation, data-driven testing, reusable HTTP code, hooks, environment configuration, tags, reporting, and CI readiness.
+A black-box API automation framework for the public [Restful Booker API](https://restful-booker.herokuapp.com/apidoc/index.html). This portfolio project demonstrates how I design readable, maintainable API checks around business behaviour—not just status-code assertions.
 
-## Why this stack
+> **Status:** In active development. The foundation smoke scenarios are in place; the complete 15-scenario coverage plan is documented below.
 
-- **Cucumber.js** is the scenario runner. Its Gherkin `Given / When / Then` style makes business intent readable to non-technical people.
-- **Axios** sends HTTP requests to a public API as a separate black-box system. **SuperTest** is excellent when you can import an Express app/server from the same repository; that is not this project, so Axios is more natural.
-- **Chai `expect`** gives readable assertions such as `expect(response.status).to.equal(200)`.
-- **AJV + ajv-formats** validate JSON response shapes, a lightweight contract-style check.
-- **dotenv** keeps the base URL and future credentials out of source code.
-- **ESLint + Prettier** keep code consistent and catch common mistakes.
+## What this project demonstrates
 
-Vitest is deliberately not the main runner: Cucumber already owns scenario execution, and adding Vitest for API scenarios would create two competing runners. Later, Vitest can be added for small, isolated unit tests of utilities.
+- BDD specifications written in Gherkin with Cucumber.js
+- Black-box HTTP testing with Axios against an external API
+- Authentication and CRUD coverage: GET, POST, PUT, PATCH and DELETE
+- Positive, negative, persistence and data-integrity checks
+- JSON-schema validation with AJV
+- Data-driven scenarios with `Scenario Outline` and Examples tables
+- Shared Cucumber World state, reusable helpers and safe hooks
+- Tag-based execution for smoke, regression and negative suites
+- Environment-based configuration with no committed secrets
+- Readable terminal HTTP diagnostics with sensitive values redacted
+- Linting and formatting with ESLint and Prettier
 
-## API behavior to test
+## Technology choices
 
-The live `GET /booking` endpoint was checked while this project was created and returned an array of `{ bookingid }` objects. Restful Booker documents token creation and booking CRUD. Use the API's documented contract in your assertions. Do not force “ideal REST” status codes if its actual behavior differs; record an observed semantic oddity in the test/README instead.
+| Tool                  | Why it is used                                               |
+| --------------------- | ------------------------------------------------------------ |
+| **Cucumber.js**       | BDD runner for readable `Given / When / Then` scenarios.     |
+| **Axios**             | A clean HTTP client for a separate, external API under test. |
+| **Chai**              | Clear assertions with `expect`.                              |
+| **AJV + ajv-formats** | JSON-schema checks for response structure and data types.    |
+| **dotenv**            | Local environment configuration without hardcoded secrets.   |
+| **Pino**              | Structured terminal diagnostics with safe redaction.         |
+| **ESLint + Prettier** | Consistent, maintainable JavaScript.                         |
 
-## Project map
+### Why Axios instead of SuperTest?
 
-| Path                                 | Purpose                                                                                                                      |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| `package.json`                       | Dependencies and commands.                                                                                                   |
-| `cucumber.cjs`                       | Tells Cucumber where features and support code live.                                                                         |
-| `.env.example`                       | Safe template for local configuration.                                                                                       |
-| `src/config/env.js`                  | Loads `BASE_URL`; defaults to the public demo API and checks URL validity.                                                   |
-| `src/clients/apiClient.js`           | Reusable generic Axios `get/post/put/patch/delete` wrappers. It returns non-2xx responses so negative tests can assert them. |
-| `src/helpers/responseValidator.js`   | AJV schema validator returning `valid` and readable errors.                                                                  |
-| `src/helpers/testData.js`            | Timestamp-suffixed name helper for resources you create.                                                                     |
-| `src/schemas/booking.schema.json`    | Starter schema for a single booking response.                                                                                |
-| `features/auth`, `features/bookings` | Your human-readable Gherkin specifications.                                                                                  |
-| `features/step_definitions`          | Your JavaScript translations of Gherkin steps. Deliberately empty.                                                           |
-| `features/support/world.js`          | Per-scenario shared state: response, token, created IDs, request body, context.                                              |
-| `features/support/hooks.js`          | Safe setup/reset/cleanup location. It never guesses shared booking IDs.                                                      |
-| `reports/`                           | Generated JSON output; ignored by Git.                                                                                       |
+SuperTest is ideal when a test can import an Express application or server from the same codebase. This project treats Restful Booker as an external system, so Axios is the more natural black-box testing client.
 
-## Install and run
+### Why Cucumber.js instead of Vitest?
 
-1. Open a terminal in this folder.
-2. Copy `.env.example` to `.env`; keep its `BASE_URL` unless you intentionally use another environment.
-3. Run `npm install`.
-4. Run `npm test`. It should load the scaffold; no scenarios are implemented yet.
-5. Use `npm run lint`, `npm run format:check`, or `npm run format` as you work.
+Cucumber.js owns scenario execution in this BDD framework. Adding Vitest for the same API scenarios would introduce two competing test runners. Vitest remains a sensible future option for isolated unit tests of utilities.
 
-Useful commands:
+## Project structure
 
 ```text
-npm test                    # all scenarios
-npm run test:smoke          # @smoke only
-npm run test:regression     # @regression only (add this tag to your complete suite)
-npm run test:negative       # failure paths only
-npm run test:report         # writes reports/cucumber-report.json
+api-automation-cucumber-js/
+├── features/
+│   ├── auth/                    # Authentication specifications
+│   ├── bookings/                # Booking API specifications
+│   ├── step_definitions/        # Gherkin-to-JavaScript bindings
+│   └── support/                 # World state and scenario hooks
+├── src/
+│   ├── clients/apiClient.js     # Reusable Axios request wrappers
+│   ├── config/env.js            # BASE_URL loading and validation
+│   ├── helpers/                 # Logging, test data and validation helpers
+│   └── schemas/                 # JSON-schema contracts
+├── .env.example                 # Safe local configuration template
+├── cucumber.cjs                 # Cucumber configuration
+└── package.json                 # Scripts and dependencies
 ```
 
-The JSON report is stable and minimal; later you can feed it to Allure or another maintained HTML reporter. Never commit `.env`; never put real credentials in it. If Restful Booker has published demo credentials, read them from its documentation and use them locally only.
+## Getting started
 
-### Terminal HTTP logging
+```bash
+git clone <your-repository-url>
+cd api-automation-cucumber-js
+npm install
+```
 
-Pino logs the final HTTP interaction for each scenario after it finishes. The terminal shows the scenario name, request method, endpoint, request headers/body, and response status/headers/body. Sensitive values such as passwords, tokens, cookies, and authorization headers are automatically replaced with `[REDACTED]`. Response bodies are formatted and capped at 30 lines, so request details remain visible.
+Create a local `.env` file from `.env.example`:
 
-For example, run `npm run test:smoke`. The current learning scenarios make one request each, so the output represents the full interaction. When you later build multi-request workflows (for example POST then GET), the final response is logged; we can extend the logger to keep a complete per-scenario interaction timeline when you reach those tests.
+```text
+BASE_URL=https://restful-booker.herokuapp.com
+```
 
-## Test roadmap — you implement these
+Never commit `.env` or real credentials.
 
-For every request, think **POISED**: purpose, operation/method, inputs (route/query/body/headers), expected output, status, and data checks. Assert status, relevant headers/content type, and body—not status alone.
+## Commands
+
+| Command                   | Purpose                                    |
+| ------------------------- | ------------------------------------------ |
+| `npm test`                | Run all scenarios.                         |
+| `npm run test:smoke`      | Run scenarios tagged `@smoke`.             |
+| `npm run test:regression` | Run scenarios tagged `@regression`.        |
+| `npm run test:negative`   | Run scenarios tagged `@negative`.          |
+| `npm run test:report`     | Generate a Cucumber JSON execution report. |
+| `npm run lint`            | Check JavaScript quality rules.            |
+| `npm run format:check`    | Verify formatting without changing files.  |
+| `npm run format`          | Apply Prettier formatting.                 |
+
+## HTTP diagnostics
+
+Each completed scenario writes a readable HTTP summary to the terminal. It includes:
+
+- scenario name;
+- URL and request method;
+- request JSON and headers;
+- response status and headers;
+- formatted response-body preview, capped at 30 lines.
+
+Passwords, tokens, cookies, authorization headers and similar values are replaced with `[REDACTED]` before they are logged. This keeps failures diagnosable without exposing secrets.
+
+## Test design principles
+
+Every check uses **POISED** thinking:
+
+```text
+Purpose → Operation → Inputs → Expected output → Status → Data checks
+```
+
+Tests assert more than a status code: they validate relevant headers, response bodies, field types, persistence, and failure safety. Since the target API is shared, created resource names use a timestamp suffix only for runtime identity. Contract expectations remain stable and deterministic.
+
+## Coverage roadmap
+
+The following scenarios form the target regression suite. The early smoke scenarios establish the framework; the remaining checks are implemented incrementally to keep each learning step focused and reviewable.
 
 | #   | Scenario / tags                                            | Method and endpoint; send                                  | Assert                                                | Learning objective               |
 | --- | ---------------------------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
@@ -83,37 +130,40 @@ For every request, think **POISED**: purpose, operation/method, inputs (route/qu
 | 14  | Delete then read `@delete @auth`                           | DELETE created ID with token                               | documented delete response; follow-up GET not found   | Cleanup and lifecycle            |
 | 15  | Unauthorized delete `@negative @delete @auth`              | DELETE created ID without valid token                      | rejection; follow-up GET proves it remains            | Authorization + integrity        |
 
-Use static expected values where contracts need stable assertions. For resource identity on a shared public API, a timestamp suffix in a created first/last name is appropriate. That is **unique runtime test data**, not random contract expectation data: never make expected response rules random, especially in Pact-style contracts.
+## Test isolation and cleanup
 
-## How we will build this together
+Each scenario should manage only data it creates. Created booking IDs belong in the Cucumber World and can be safely cleaned up by hooks later. Tests must never delete a shared booking by guessing an ID.
 
-You write one scenario at a time. First write only the Gherkin; then we discuss each step and you write its step definitions; finally we refactor repeated code into helpers. I will explain every new keyword, JavaScript feature, and testing concept before you write it, then review/debug/advice—not take over the implementation.
+For shared public APIs, a timestamp suffix is appropriate for identifying a newly created resource. This is different from random contract data: expected response values, schemas and assertion rules must remain stable.
 
-Order: smoke GET → auth → POST → persistence → PUT/PATCH → negative/integrity checks → schema → tags/reporting → CI.
+## Quality checklist
 
-Keep scenarios isolated. Prefer creating your own records and storing their IDs in the World. Cleanup only an ID the current scenario created; a public shared API must never be cleaned by a guessed ID. If network instability occurs, diagnose it first—do not hide it with broad retries.
+- [ ] 12–15 meaningful scenarios pass reliably
+- [ ] Reusable API client, World state and scenario hooks are used consistently
+- [ ] CRUD, authentication, query, negative, persistence and integrity coverage exists
+- [ ] AJV schema validation protects the API response contract
+- [ ] Smoke, regression and negative tags support targeted execution
+- [ ] JSON and HTML reporting are available
+- [ ] Linting and formatting checks pass
+- [ ] No secrets are committed
+- [ ] GitHub Actions runs the suite in CI
 
-## Definition of Done for CV
+## Future improvements
 
-- [ ] 12–15 passing, meaningful scenarios
-- [ ] Reusable API client and useful helpers
-- [ ] World and safe hooks used intentionally
-- [ ] Auth, CRUD, query, negative, persistence and integrity coverage
-- [ ] AJV schema validation
-- [ ] Tags plus JSON/HTML-style reporting
-- [ ] Clear README and clean lint/format checks
-- [ ] No hardcoded secrets; deterministic data where possible
-- [ ] GitHub Actions workflow added later
+- GitHub Actions CI pipeline
+- Built-in Cucumber HTML report with attached failure diagnostics
+- Pact contract tests against a controllable provider
+- Dockerised execution environment
+- Retry policy limited to proven network instability
+- Vitest unit tests for isolated helpers
 
-## Future upgrades (do not implement now)
+## Development approach
 
-- GitHub Actions CI
-- Pact contract testing against a controllable provider
-- Dockerized test environment
-- Allure or another HTML reporting layer consuming Cucumber JSON
-- Narrow retry strategy for proven network instability only
-- Vitest utility-unit tests
+Scenarios are built in a deliberate progression:
 
-## First learning task
+```text
+Smoke GET → Authentication → POST → Persistence → PUT/PATCH
+→ Negative and integrity checks → Schema validation → Reporting → CI
+```
 
-Write **only Gherkin** for scenario 3: “GET all booking IDs returns a successful array-like collection,” tagged `@smoke @get`, in `features/bookings/bookings.feature`. Do not write step-definition JavaScript yet. Bring that Gherkin back and we will review it line by line.
+Each scenario begins as Gherkin, then receives focused step definitions. Repeated setup and assertions are refactored only after the intent is understood and verified.
