@@ -1,0 +1,7 @@
+node_modules/
+.env
+reports/
+logs/
+*.log
+cucumber*-test-runner.*
+.DS_Store

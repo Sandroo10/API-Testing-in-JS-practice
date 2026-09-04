@@ -1,0 +1,5 @@
+{
+  "cucumber.features": ["features/**/*.feature"],
+  "cucumber.glue": ["features/**/*.js"],
+  "cucumberTestExtension.workingDirectory": "."
+}
