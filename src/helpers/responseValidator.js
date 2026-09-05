@@ -1,7 +1,7 @@
-const Ajv = require('ajv');
+const Ajv2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
-const ajv = new Ajv({ allErrors: true, strict: false });
+const ajv = new Ajv2020({ allErrors: true, strict: false });
 addFormats(ajv);
 
 function validateResponse(schema, data) {

@@ -36,3 +36,27 @@ Feature: Booking API learning roadmap
     And I filter bookings using the created booking name
     Then the response status should be 200
     And the filtered booking IDs should include the created booking ID
+
+  @get @contract
+  Scenario: Retrieved booking has the expected field types
+    Given I have a valid booking request body
+    When I create the booking
+    And I retrieve the created booking
+    Then the response status should be 200
+    And the retrieved booking should have the expected field types
+
+  @get @query
+  Scenario: Created booking can be found by check-in and check-out dates
+    Given I have a valid booking request body
+    When I create the booking
+    And I filter bookings using the created booking dates
+    Then the response status should be 200
+    And the filtered booking IDs should include the created booking ID
+
+  @get @schema
+  Scenario: Retrieved booking matches the response schema
+    Given I have a valid booking request body
+    When I create the booking
+    And I retrieve the created booking
+    Then the response status should be 200
+    And the retrieved booking should match the booking response schema
