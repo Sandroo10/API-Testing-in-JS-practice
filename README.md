@@ -110,7 +110,7 @@ Tests assert more than a status code: they validate relevant headers, response b
 
 ## Coverage roadmap
 
-The following scenarios form the target regression suite. **10 of 15 roadmap items are implemented**; the separate manual field-type scenario complements item 4. There are 11 scenario definitions, and the data-driven outline runs once per example row.
+The following scenarios form the target regression suite. **11 of 15 roadmap items are implemented**; the separate manual field-type scenario complements item 4. There are 12 scenario definitions, and the data-driven outline runs once per example row.
 
 | #   | Scenario / tags                                            | Status      | Method and endpoint; send                                  | Assert                                                 | Learning objective               |
 | --- | ---------------------------------------------------------- | ----------- | ---------------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
@@ -124,7 +124,7 @@ The following scenarios form the target regression suite. **10 of 15 roadmap ite
 | 8   | Create booking `@smoke @post`                              | Implemented | `POST /booking`; static valid body                         | created wrapper, generated ID, echoed data             | Request body and POST validation |
 | 9   | Create then read `@post @persistence`                      | Implemented | POST, save ID, then GET it                                 | persisted fields equal intended data                   | State and persistence check      |
 | 10  | Data-driven creation `@post @data-driven`                  | Implemented | Scenario Outline; 3 valid data sets                        | each created booking echoes its own input              | Examples tables and boundaries   |
-| 11  | Full update `@put @auth`                                   | Planned     | `PUT /booking/{created-id}`; token + full replacement body | success then GET equals replacement                    | Auth headers + PUT               |
+| 11  | Full update workflow `@workflow @regression`               | Implemented | auth, POST, `PUT /booking/{created-id}`, then GET          | updated response then GET equals replacement           | End-to-end API workflow          |
 | 12  | Partial update `@patch @auth`                              | Planned     | `PATCH /booking/{created-id}`; token + one/few fields      | changed fields changed; untouched fields remain        | PATCH integrity                  |
 | 13  | Unauthorized update integrity `@negative @auth @integrity` | Planned     | PUT/PATCH created ID without/invalid token                 | rejection, then GET proves original was not corrupted  | Failure safety                   |
 | 14  | Delete then read `@delete @auth`                           | Planned     | DELETE created ID with token                               | documented delete response; follow-up GET not found    | Cleanup and lifecycle            |

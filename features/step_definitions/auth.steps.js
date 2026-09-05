@@ -18,6 +18,8 @@ When('I request an authentication token', async function () {
 Then('the response should contain a usable token', function () {
   expect(this.response.data).to.have.property('token');
   expect(this.response.data.token).to.be.a('string');
+  expect(this.response.data.token).to.not.be.empty;
+  this.token = this.response.data.token;
 });
 
 Then('the response should not contain a usable token', function () {

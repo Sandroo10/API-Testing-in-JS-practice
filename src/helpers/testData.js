@@ -24,4 +24,19 @@ const validBooking = {
   additionalneeds: 'Breakfast'
 };
 
-module.exports = { uniqueTestName, validUser, invalidUser, validBooking };
+const replacementBooking = {
+  ...validBooking,
+  firstname: 'James',
+  lastname: 'Updated',
+  totalprice: 222,
+  depositpaid: false,
+  additionalneeds: 'Dinner'
+};
+
+module.exports = {
+  uniqueTestName,
+  validUser,
+  invalidUser,
+  validBooking,
+  replacementBooking
+};

@@ -1,8 +1,11 @@
 const { When, Then, Given } = require('@cucumber/cucumber');
 const { expect } = require('chai');
-const { get, post } = require('../../src/clients/apiClient');
+const { get, post, put } = require('../../src/clients/apiClient');
 const { validateResponse } = require('../../src/helpers/responseValidator');
-const { validBooking } = require('../../src/helpers/testData');
+const {
+  validBooking,
+  replacementBooking
+} = require('../../src/helpers/testData');
 const bookingSchema = require('../../src/schemas/booking.schema.json');
 
 When('I request all booking IDs', async function () {
@@ -23,6 +26,10 @@ Then('the response should be an array of booking IDs', function () {
 
 Given('I have a valid booking request body', function () {
   this.body = validBooking;
+});
+
+Given('I have a replacement booking request body', function () {
+  this.body = replacementBooking;
 });
 
 Given(
@@ -56,7 +63,19 @@ When('I retrieve the created booking', async function () {
   this.response = await get(`/booking/${createdBookingId}`);
 });
 
+When('I fully update the created booking with my authentication token', async function () {
+    const createdBookingId = this.createdBookingIds.at(-1);
+
+    this.response = await put(`/booking/${createdBookingId}`, this.body, {
+      headers: { Cookie: `token=${this.token}` }
+    });
+});
+
 Then('the retrieved booking should match the request body', function () {
+  expect(this.response.data).to.deep.equal(this.body);
+});
+
+Then('the booking response should match the request body', function () {
   expect(this.response.data).to.deep.equal(this.body);
 });
 
