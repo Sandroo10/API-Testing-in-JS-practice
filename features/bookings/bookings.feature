@@ -51,6 +51,19 @@ Feature: Booking API learning roadmap
     Then the response status should be 200
     And the response should be an array of booking IDs
 
+  @post @data-driven
+  Scenario Outline: Booking can be created with different valid data
+    Given I have a booking request body for "<firstname>" "<lastname>" costing <totalprice>
+    When I create the booking
+    Then the response status should be 200
+    And the created booking should match the request body
+
+    Examples:
+      | firstname     | lastname | totalprice |
+      | PortfolioAnna | Green    | 1          |
+      | PortfolioBen  | Stone    | 111        |
+      | PortfolioCara | Jones    | 999        |
+
   @get @schema
   Scenario: Retrieved booking matches the response schema
     Given I have a valid booking request body

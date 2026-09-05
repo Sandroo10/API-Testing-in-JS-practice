@@ -25,6 +25,18 @@ Given('I have a valid booking request body', function () {
   this.body = validBooking;
 });
 
+Given(
+  'I have a booking request body for {string} {string} costing {int}',
+  function (firstname, lastname, totalprice) {
+    this.body = {
+      ...validBooking,
+      firstname,
+      lastname,
+      totalprice
+    };
+  }
+);
+
 When('I create the booking', async function () {
   this.response = await post('/booking', this.body);
   this.createdBookingIds.push(this.response.data.bookingid);
