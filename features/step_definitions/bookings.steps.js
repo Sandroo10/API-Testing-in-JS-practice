@@ -1,6 +1,12 @@
 const { When, Then, Given } = require('@cucumber/cucumber');
 const { expect } = require('chai');
-const { get, post, put, patch } = require('../../src/clients/apiClient');
+const {
+  get,
+  post,
+  put,
+  patch,
+  delete: deleteRequest
+} = require('../../src/clients/apiClient');
 const { validateResponse } = require('../../src/helpers/responseValidator');
 const { validBooking, replacementBooking } = require('../../src/helpers/testData');
 const bookingSchema = require('../../src/schemas/booking.schema.json');
@@ -40,7 +46,9 @@ Given('I have a partial booking update body', function () {
   };
 });
 
-Given('I have a booking request body for {string} {string} costing {int}', function (firstname, lastname, totalprice) {
+Given(
+  'I have a booking request body for {string} {string} costing {int}',
+  function (firstname, lastname, totalprice) {
     this.body = {
       ...validBooking,
       firstname,
@@ -91,7 +99,30 @@ When(
   }
 );
 
-Then('the booking response should include the partial update and preserve other fields', function () {
+When(
+  'I attempt to partially update the created booking without authentication',
+  async function () {
+    const createdBookingId = this.createdBookingIds.at(-1);
+    this.response = await patch(`/booking/${createdBookingId}`, this.body);
+  }
+);
+
+When('I delete the created booking with my authentication token', async function () {
+  const createdBookingId = this.createdBookingIds.at(-1);
+
+  this.response = await deleteRequest(`/booking/${createdBookingId}`, {
+    headers: { Cookie: `token=${this.token}` }
+  });
+});
+
+When('I delete the created booking without authentication', async function () {
+  const createdBookingId = this.createdBookingIds.at(-1);
+  this.response = await deleteRequest(`/booking/${createdBookingId}`);
+});
+
+Then(
+  'the booking response should include the partial update and preserve other fields',
+  function () {
     const booking = this.response.data;
 
     expect(booking.firstname).to.equal(this.body.firstname);
@@ -109,6 +140,10 @@ Then('the retrieved booking should match the request body', function () {
 
 Then('the booking response should match the request body', function () {
   expect(this.response.data).to.deep.equal(this.body);
+});
+
+Then('the retrieved booking should match the original booking', function () {
+  expect(this.response.data).to.deep.equal(this.originalBooking);
 });
 
 When('I request booking ID {int}', async function (bookingId) {

@@ -110,25 +110,25 @@ Tests assert more than a status code: they validate relevant headers, response b
 
 ## Coverage roadmap
 
-The following scenarios form the target regression suite. **12 of 15 roadmap items are implemented**; the separate manual field-type scenario complements item 4. There are 13 scenario definitions, and the data-driven outline runs once per example row.
+The following scenarios form the target regression suite. **All 15 roadmap items are implemented**; the separate manual field-type scenario complements item 4. There are 16 scenario definitions, and the data-driven outline runs once per example row.
 
-| #   | Scenario / tags                                            | Status      | Method and endpoint; send                             | Assert                                                | Learning objective               |
-| --- | ---------------------------------------------------------- | ----------- | ----------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
-| 1   | Successful token `@smoke @auth`                            | Implemented | `POST /auth`; valid documented demo credentials       | success status and non-empty token                    | Auth request/body validation     |
-| 2   | Invalid token `@negative @auth`                            | Implemented | `POST /auth`; invalid credentials                     | no usable token; `Bad credentials` reason             | Safe negative assertions         |
-| 3   | List booking IDs `@smoke @get`                             | Implemented | `GET /booking`                                        | 200; JSON; array; entries have numeric `bookingid`    | Simplest smoke GET               |
-| 4   | Read valid booking `@get @schema`                          | Implemented | `GET /booking/{created-id}`                           | status, field types and AJV schema                    | Route parameter + contract shape |
-| 5   | Read unknown booking `@negative @get`                      | Implemented | `GET /booking/{unlikely-id}`                          | documented not-found behaviour                        | Error body/status handling       |
-| 6   | Name filter `@get @query`                                  | Implemented | `GET /booking?firstname=...&lastname=...`             | returned IDs include created booking                  | Query parameters                 |
-| 7   | Date filter `@get @query`                                  | Implemented | `GET /booking?checkin=YYYY-MM-DD`                     | `200`; array-like collection of booking IDs           | Date query inputs                |
-| 8   | Create booking `@smoke @post`                              | Implemented | `POST /booking`; static valid body                    | created wrapper, generated ID, echoed data            | Request body and POST validation |
-| 9   | Create then read `@post @persistence`                      | Implemented | POST, save ID, then GET it                            | persisted fields equal intended data                  | State and persistence check      |
-| 10  | Data-driven creation `@post @data-driven`                  | Implemented | Scenario Outline; 3 valid data sets                   | each created booking echoes its own input             | Examples tables and boundaries   |
-| 11  | Full update workflow `@workflow @regression`               | Implemented | auth, POST, `PUT /booking/{created-id}`, then GET     | updated response then GET equals replacement          | End-to-end API workflow          |
-| 12  | Partial update workflow `@workflow @regression`            | Implemented | create, auth, `PATCH /booking/{created-id}`, then GET | changed fields change; untouched fields remain        | PATCH integrity                  |
-| 13  | Unauthorized update integrity `@negative @auth @integrity` | Planned     | PUT/PATCH created ID without/invalid token            | rejection, then GET proves original was not corrupted | Failure safety                   |
-| 14  | Delete then read `@delete @auth`                           | Planned     | DELETE created ID with token                          | documented delete response; follow-up GET not found   | Cleanup and lifecycle            |
-| 15  | Unauthorized delete `@negative @delete @auth`              | Planned     | DELETE created ID without valid token                 | rejection; follow-up GET proves it remains            | Authorization + integrity        |
+| #   | Scenario / tags                                          | Status      | Method and endpoint; send                             | Assert                                                 | Learning objective               |
+| --- | -------------------------------------------------------- | ----------- | ----------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
+| 1   | Successful token `@smoke @auth`                          | Implemented | `POST /auth`; valid documented demo credentials       | success status and non-empty token                     | Auth request/body validation     |
+| 2   | Invalid token `@negative @auth`                          | Implemented | `POST /auth`; invalid credentials                     | no usable token; `Bad credentials` reason              | Safe negative assertions         |
+| 3   | List booking IDs `@smoke @get`                           | Implemented | `GET /booking`                                        | 200; JSON; array; entries have numeric `bookingid`     | Simplest smoke GET               |
+| 4   | Read valid booking `@get @schema`                        | Implemented | `GET /booking/{created-id}`                           | status, field types and AJV schema                     | Route parameter + contract shape |
+| 5   | Read unknown booking `@negative @get`                    | Implemented | `GET /booking/{unlikely-id}`                          | documented not-found behaviour                         | Error body/status handling       |
+| 6   | Name filter `@get @query`                                | Implemented | `GET /booking?firstname=...&lastname=...`             | returned IDs include created booking                   | Query parameters                 |
+| 7   | Date filter `@get @query`                                | Implemented | `GET /booking?checkin=YYYY-MM-DD`                     | `200`; array-like collection of booking IDs            | Date query inputs                |
+| 8   | Create booking `@smoke @post`                            | Implemented | `POST /booking`; static valid body                    | created wrapper, generated ID, echoed data             | Request body and POST validation |
+| 9   | Create then read `@post @persistence`                    | Implemented | POST, save ID, then GET it                            | persisted fields equal intended data                   | State and persistence check      |
+| 10  | Data-driven creation `@post @data-driven`                | Implemented | Scenario Outline; 3 valid data sets                   | each created booking echoes its own input              | Examples tables and boundaries   |
+| 11  | Full update workflow `@workflow @regression`             | Implemented | auth, POST, `PUT /booking/{created-id}`, then GET     | updated response then GET equals replacement           | End-to-end API workflow          |
+| 12  | Partial update workflow `@workflow @regression`          | Implemented | create, auth, `PATCH /booking/{created-id}`, then GET | changed fields change; untouched fields remain         | PATCH integrity                  |
+| 13  | Rejected-update integrity `@negative @integrity`         | Implemented | PATCH created ID without a token                      | rejection, then GET proves original was not corrupted  | Failure safety                   |
+| 14  | Authenticated delete workflow `@delete`                  | Implemented | create, auth, DELETE created ID, then GET             | documented delete response; follow-up GET is not found | Cleanup and lifecycle            |
+| 15  | Rejected-delete integrity `@negative @delete @integrity` | Implemented | DELETE created ID without a token                     | rejection; follow-up GET proves it remains             | Authorization + integrity        |
 
 ## Test isolation and cleanup
 
