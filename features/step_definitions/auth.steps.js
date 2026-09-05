@@ -4,8 +4,7 @@ const { post } = require('../../src/clients/apiClient');
 const { validUser } = require('../../src/helpers/testData');
 
 Given('I have valid authentication credentials', function () {
-  const { username, password } = validUser;
-  this.body = { username, password };
+  this.body = validUser;
 });
 
 When('I request an authentication token', async function () {
