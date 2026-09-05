@@ -66,11 +66,10 @@ When('I filter bookings using the created booking name', async function () {
   });
 });
 
-When('I filter bookings using the created booking dates', async function () {
+When('I filter booking IDs by check-in date {string}', async function (checkin) {
   this.response = await get('/booking', {
     params: {
-      checkin: this.body.bookingdates.checkin,
-      checkout: this.body.bookingdates.checkout
+      checkin
     }
   });
 });

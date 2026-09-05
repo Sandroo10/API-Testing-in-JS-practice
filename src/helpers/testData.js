@@ -7,6 +7,11 @@ const validUser = {
   password: 'password123'
 };
 
+const invalidUser = {
+  username: 'not-a-real-user',
+  password: 'not-a-real-password'
+};
+
 const validBooking = {
   firstname: 'Jim',
   lastname: 'Brown',
@@ -19,4 +24,4 @@ const validBooking = {
   additionalneeds: 'Breakfast'
 };
 
-module.exports = { uniqueTestName, validUser, validBooking };
+module.exports = { uniqueTestName, validUser, invalidUser, validBooking };

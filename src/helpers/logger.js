@@ -70,7 +70,13 @@ function formatJson(value) {
 
 function formatScenarioLog(scenarioName, response) {
   const { config } = response;
-  const endpoint = new URL(config.url, config.baseURL).toString();
+  const endpoint = new URL(config.url, config.baseURL);
+
+  for (const [key, value] of Object.entries(config.params || {})) {
+    if (value !== undefined && value !== null) {
+      endpoint.searchParams.set(key, value);
+    }
+  }
 
   return [
     `Scenario: ${scenarioName}`,
